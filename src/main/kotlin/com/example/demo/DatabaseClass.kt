@@ -8,11 +8,13 @@ import java.sql.ResultSet
 import java.sql.Statement
 import java.time.LocalDate
 
+//Класс для работы с базой
 class DatabaseClass {
     // Связываемся с базой данных SQLite
     private val connection: Connection = DriverManager.getConnection("jdbc:sqlite:src/main/resources/notes.db")
     private val statement: Statement = connection.createStatement()
 
+    //Обновление списка
     fun refreshListView(): ObservableList<Note>{
         val list= FXCollections.observableArrayList<Note>()
         //Запрос
@@ -32,18 +34,21 @@ class DatabaseClass {
         return list
     }
 
+    //Изменение заметки
     fun updateNote(note:Note){
         val answer =
             statement.executeUpdate("UPDATE notes SET date = '${note.date}', title = '${note.title}', text = '${note.text}' WHERE id = ${note.id}")
         statement.close()
     }
 
+    //Добавление заметки
     fun addNote(note: Note){
         val answer =
             statement.executeUpdate("INSERT INTO notes (date, title, text) VALUES ('${note.date}','${note.title}','${note.text}')")
         statement.close()
     }
 
+    //Удаление заметки
     fun deleteNote(id: Int){
         val answer = statement.executeUpdate("DELETE FROM notes WHERE id = $id")
         statement.close()

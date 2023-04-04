@@ -65,7 +65,7 @@ class HelloApplication : Application() {
         notesList = database.refreshListView()
         notesListView.items = notesList
     }
-    //
+    //Диалоговое окно для добавления
     private fun openAddNoteDialog() {
         val dialogStage = Stage()
         val dialogScene = noteDialogScene(dialogStage, null)
@@ -128,6 +128,7 @@ class HelloApplication : Application() {
         return Scene(root, 300.0, 250.0)
     }
 
+    //Диалоговое окно для просмотра/Изменения
     private fun openNoteInfoWindow(note: Note) {
         val noteInfoStage = Stage()
         val noteInfoScene = noteDialogScene(noteInfoStage, note)
@@ -137,6 +138,7 @@ class HelloApplication : Application() {
     }
 }
 
+//Заметка
 class Note(val id: Int, val date: LocalDate, val title: String, val text: String) {
 
     override fun toString(): String {
