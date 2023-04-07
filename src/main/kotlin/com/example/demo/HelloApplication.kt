@@ -10,6 +10,8 @@ import javafx.stage.Stage
 import java.time.LocalDate
 
 
+
+
 class HelloApplication : Application() {
    //Создаем пустую коллекцию для заметок
     private var notesList = FXCollections.observableArrayList<Note>()
@@ -33,7 +35,7 @@ class HelloApplication : Application() {
     private val database = DatabaseClass()
 
     override fun start(primaryStage: Stage) {
-        refreshListView()
+        refreshListView(true)
         val menuPanel = addButton
         val listPanel = BorderPane(notesListView)
         mainRoot.top = menuPanel
@@ -42,27 +44,14 @@ class HelloApplication : Application() {
         primaryStage.scene = scene
         primaryStage.title = "Заметки"
         primaryStage.show()
+
+
     }
 
-    //Создание отображаемого списка
-    private fun createNotesListView(): ListView<Note> {
-        val notesListView = ListView<Note>()
-        notesListView.items = notesList
-        //Обработка ДаблКлика
-        notesListView.setOnMouseClicked { event ->
-            if (event.clickCount == 2) {
-                val index = notesListView.selectionModel.selectedIndex
-                val selectedNote = notesList[index]
-                openNoteInfoWindow(selectedNote)
-            }
-        }
-        return notesListView
-    }
-
-    //Обновление заметок
-    private fun refreshListView(){
+    //Обновление заметок, пробрасываем null если не первый вызов функции, любой boolean если первый
+    private fun refreshListView(isStart: Boolean?){
         notesList.clear()
-        notesList = database.refreshListView()
+        notesList = database.refreshListView(isStart)
         notesListView.items = notesList
     }
     //Диалоговое окно для добавления
@@ -102,7 +91,7 @@ class HelloApplication : Application() {
             } else {
                 database.addNote(Note(0, dateString, title, text))
             }
-            refreshListView()
+            refreshListView(null)
             dialogStage.close()
         }
 
@@ -110,7 +99,7 @@ class HelloApplication : Application() {
             if (note != null) {
                 database.deleteNote(note.id)
             }
-            refreshListView()
+            refreshListView(null)
             dialogStage.close()
         }
 

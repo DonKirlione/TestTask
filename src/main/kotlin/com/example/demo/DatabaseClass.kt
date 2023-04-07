@@ -7,6 +7,7 @@ import java.sql.DriverManager
 import java.sql.ResultSet
 import java.sql.Statement
 import java.time.LocalDate
+import javax.swing.JOptionPane
 
 //Класс для работы с базой
 class DatabaseClass {
@@ -15,7 +16,7 @@ class DatabaseClass {
     private val statement: Statement = connection.createStatement()
 
     //Обновление списка
-    fun refreshListView(): ObservableList<Note>{
+    fun refreshListView(start: Boolean?): ObservableList<Note>{
         val list= FXCollections.observableArrayList<Note>()
         //Запрос
         val resultSet: ResultSet = statement.executeQuery("SELECT * FROM notes ORDER BY date DESC")
@@ -27,6 +28,17 @@ class DatabaseClass {
             val text = resultSet.getString("text")
             //Пополняем список
             list.add(Note(id, date, title, text))
+
+            //Если первый запуск
+            if (start != null) {
+                //Сверяем дату
+                if (date == LocalDate.now()) {
+                    //Выбрасываем уведомление
+                    JOptionPane.showMessageDialog(null, text, title, JOptionPane.INFORMATION_MESSAGE)
+                }
+            }
+
+
         }
         //Закрываем соединения
         resultSet.close()
